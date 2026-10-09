@@ -1,0 +1,122 @@
+name: WVF WD Multiplatform Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-desktop:
+    name: Build Windows & Linux Desktop Apps
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.26.x"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build Core Go Binaries
+        run: |
+          mkdir -p dist
+          # Windows x64 binary
+          GOOS=windows GOARCH=amd64 go build -trimpath -ldflags="-s -w" -o desktop/wvf-wd.exe ./go_client
+          cp desktop/wvf-wd.exe dist/wvf-wd-windows-x64.exe
+
+          # Linux x64 binary
+          GOOS=linux GOARCH=amd64 go build -trimpath -ldflags="-s -w" -o desktop/wvf-wd ./go_client
+          cp desktop/wvf-wd dist/wvf-wd-linux-x64
+          chmod +x dist/wvf-wd-linux-x64
+
+          # Linux ARM64 binary
+          GOOS=linux GOARCH=arm64 go build -trimpath -ldflags="-s -w" -o dist/wvf-wd-linux-arm64 ./go_client
+          chmod +x dist/wvf-wd-linux-arm64
+
+      - name: Build Standalone Electron Desktop Apps (Windows & Linux)
+        run: |
+          cd desktop
+          npm ci || npm install
+          # Build Linux AppImage and Windows Portable GUI
+          npx electron-builder --linux AppImage --win portable
+
+      - name: Move Desktop Artifacts
+        run: |
+          mkdir -p dist/packages
+          cp dist/electron/*.exe dist/packages/ 2>/dev/null || true
+          cp dist/electron/*.AppImage dist/packages/ 2>/dev/null || true
+          cp dist/wvf-wd-* dist/packages/ 2>/dev/null || true
+
+      - name: Upload Desktop Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: desktop-packages
+          path: dist/packages/
+
+  build-android:
+    name: Build Android APKs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: gradle
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.26.x"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK packages
+        run: sdkmanager "platforms;android-35" "build-tools;35.0.0" "ndk;27.2.12479018"
+
+      - name: Build Android Release APK
+        run: ./gradlew :app:assembleRelease -PtargetAbis=arm64-v8a,armeabi-v7a,x86_64 --no-daemon
+
+      - name: Upload Android APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apks
+          path: app/build/outputs/apk/release/*.apk
+
+  publish-github-release:
+    name: Publish Official GitHub Release
+    needs: [build-desktop, build-android]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-files
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "WVF WD Release ${{ github.ref_name }} (Pink Noir)"
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          files: |
+            release-files/**/*.apk
+            release-files/**/*.exe
+            release-files/**/*.AppImage
+            release-files/**/wvf-wd-*

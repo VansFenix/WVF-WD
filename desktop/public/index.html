@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WVF WD — Multiplatform QWDTT Client</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar / Navigation -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo-wrapper">
+          <img src="logo.png" alt="WVF WD Logo" class="brand-logo">
+          <div class="logo-glow"></div>
+        </div>
+        <div class="brand-text">
+          <h1 class="brand-title">WVF · WD</h1>
+          <span class="brand-subtitle">QWDTT Protocol Client</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <button class="nav-item active" data-tab="dashboard">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          <span>Подключение</span>
+        </button>
+        <button class="nav-item" data-tab="profiles">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+          <span>Профили</span>
+        </button>
+        <button class="nav-item" data-tab="hashes">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+          <span>VK Хеши</span>
+        </button>
+        <button class="nav-item" data-tab="logs">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          <span>Логи & Сеть</span>
+        </button>
+        <button class="nav-item" data-tab="settings">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          <span>Настройки</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="os-badge" id="os-badge">
+          <span class="os-dot"></span>
+          <span id="os-name">Windows x64</span>
+        </div>
+        <div class="theme-signature">WVF Noir Pink</div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Top Bar -->
+      <header class="topbar">
+        <div class="topbar-status">
+          <div class="status-indicator" id="status-indicator">
+            <span class="pulse-ring"></span>
+            <span class="status-dot"></span>
+            <span class="status-label" id="status-label">Отключено</span>
+          </div>
+          <div class="badge mode-badge" id="active-mode-badge">SOCKS5 127.0.0.1:1080</div>
+        </div>
+
+        <div class="topbar-metrics">
+          <div class="metric-chip" id="ip-chip">
+            <span class="metric-label">ВНЕШНИЙ IP</span>
+            <span class="metric-val" id="metric-ip">--</span>
+          </div>
+          <div class="metric-chip" id="ping-chip">
+            <span class="metric-label">PING</span>
+            <span class="metric-val" id="metric-ping">-- ms</span>
+          </div>
+          <div class="metric-chip">
+            <span class="metric-label">СКОРОСТЬ ↓</span>
+            <span class="metric-val" id="metric-rx">0 KB/s</span>
+          </div>
+          <div class="metric-chip">
+            <span class="metric-label">СКОРОСТЬ ↑</span>
+            <span class="metric-val" id="metric-tx">0 KB/s</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- View Containers -->
+      <div class="views-wrapper">
+        <!-- 1. DASHBOARD VIEW -->
+        <section class="view active" id="view-dashboard">
+          <div class="hero-card">
+            <div class="hero-left">
+              <div class="profile-info">
+                <span class="sub-heading">Текущий профиль</span>
+                <h2 class="profile-title" id="display-profile-name">Основной сервер</h2>
+                <span class="profile-endpoint" id="display-profile-endpoint">vps.example.com:9000</span>
+              </div>
+
+              <div class="hero-meta-grid">
+                <div class="meta-box">
+                  <span class="meta-name">VK Хешей</span>
+                  <span class="meta-val" id="meta-hash-count">1 активен</span>
+                </div>
+                <div class="meta-box">
+                  <span class="meta-name">Воркеров</span>
+                  <span class="meta-val" id="meta-workers-count">9 потоков</span>
+                </div>
+                <div class="meta-box">
+                  <span class="meta-name">Шифрование</span>
+                  <span class="meta-val highlight-pink">RTP AEAD + HKDF</span>
+                </div>
+                <div class="meta-box">
+                  <span class="meta-name">Системный прокси</span>
+                  <span class="meta-val" id="meta-sysproxy-status">Авто (Выкл)</span>
+                </div>
+              </div>
+
+              <div class="hero-actions">
+                <button class="btn btn-secondary" id="btn-quick-ping">
+                  <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                  <span>Замерить пинг</span>
+                </button>
+                <button class="btn btn-secondary" id="btn-check-ip">
+                  <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
+                  <span>Проверить IP</span>
+                </button>
+                <button class="btn btn-secondary" id="btn-copy-socks">
+                  <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                  <span>Копировать SOCKS5</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Big Glowing Switch Button -->
+            <div class="hero-right">
+              <div class="power-button-container">
+                <div class="outer-glow" id="outer-glow"></div>
+                <div class="pulse-wave" id="pulse-wave"></div>
+                <button class="power-button" id="btn-toggle-connect">
+                  <div class="power-icon-wrap">
+                    <svg class="power-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M18.364 5.636a9 9 0 11-12.728 0M12 2v10"/>
+                    </svg>
+                  </div>
+                  <span class="power-text" id="power-text">ПОДКЛЮЧИТЬ</span>
+                </button>
+              </div>
+              <div class="connection-timer" id="connection-timer">00:00:00</div>
+            </div>
+          </div>
+
+          <!-- Quick Parameters / Status Cards -->
+          <div class="cards-row">
+            <div class="card card-graph">
+              <div class="card-header">
+                <h3 class="card-title">Трафик в реальном времени</h3>
+                <span class="card-tag">QWDTT WebRTC Media</span>
+              </div>
+              <div class="graph-canvas-wrap">
+                <canvas id="traffic-canvas" width="600" height="130"></canvas>
+              </div>
+              <div class="graph-legend">
+                <div class="legend-item"><span class="legend-color download"></span> Входящий (RX)</div>
+                <div class="legend-item"><span class="legend-color upload"></span> Исходящий (TX)</div>
+              </div>
+            </div>
+
+            <div class="card card-quick-config">
+              <div class="card-header">
+                <h3 class="card-title">Быстрая конфигурация</h3>
+                <span class="card-tag">WVF WD</span>
+              </div>
+              <div class="form-group">
+                <label>VPS Сервер (IP : Порт)</label>
+                <input type="text" id="input-quick-peer" class="form-input" placeholder="123.45.67.89:9000">
+              </div>
+              <div class="form-group">
+                <label>Пароль подключения</label>
+                <input type="password" id="input-quick-pass" class="form-input" placeholder="••••••••••••">
+              </div>
+              <div class="form-group">
+                <label>VK Хеш звонка</label>
+                <input type="text" id="input-quick-hash" class="form-input" placeholder="0123456789abcdef... или ссылка звонка">
+              </div>
+              <button class="btn btn-primary btn-block" id="btn-save-quick">Сохранить параметры</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. PROFILES VIEW -->
+        <section class="view" id="view-profiles">
+          <div class="view-header">
+            <div>
+              <h2 class="view-title">Управление профилями</h2>
+              <p class="view-desc">Создавайте и переключайтесь между серверами и конфигурациями</p>
+            </div>
+            <div class="header-btns">
+              <button class="btn btn-secondary" id="btn-import-profile">Импорт (.qwdtt / .conf)</button>
+              <button class="btn btn-primary" id="btn-add-profile">+ Новый профиль</button>
+            </div>
+          </div>
+
+          <div class="profiles-grid" id="profiles-grid">
+            <!-- Dynamic profile cards generated by JS -->
+          </div>
+        </section>
+
+        <!-- 3. VK HASHES VIEW -->
+        <section class="view" id="view-hashes">
+          <div class="view-header">
+            <div>
+              <h2 class="view-title">VK Звонки & Хеши</h2>
+              <p class="view-desc">Управление TURN-сессиями через инфраструктуру медиазвонков VK</p>
+            </div>
+            <button class="btn btn-primary" id="btn-test-all-hashes">Проверить все хеши</button>
+          </div>
+
+          <div class="card">
+            <h3 class="card-title">Добавить хеш или ссылку</h3>
+            <p class="text-muted">Поддерживаются ссылки формата <code>vk.com/call/join/...</code> или чистые 32-байтные шестнадцатеричные хеши</p>
+            <div class="input-inline">
+              <input type="text" id="input-new-hash" class="form-input" placeholder="Вставьте ссылку на звонок VK или хеш...">
+              <button class="btn btn-primary" id="btn-add-hash">Добавить</button>
+            </div>
+          </div>
+
+          <div class="hash-list-wrap">
+            <h3 class="section-title">Список активных хешей</h3>
+            <div class="hash-list" id="hash-list">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. LOGS VIEW -->
+        <section class="view" id="view-logs">
+          <div class="view-header">
+            <div>
+              <h2 class="view-title">Консоль & Диагностика</h2>
+              <p class="view-desc">Логирование протокола QWDTT и сетевых потоков</p>
+            </div>
+            <div class="header-btns">
+              <button class="btn btn-secondary" id="btn-clear-logs">Очистить</button>
+              <button class="btn btn-secondary" id="btn-copy-logs">Копировать</button>
+            </div>
+          </div>
+
+          <div class="terminal-container">
+            <div class="terminal-bar">
+              <div class="terminal-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <span class="terminal-title">WVF WD Runtime Terminal</span>
+              <span class="terminal-counter" id="log-count">0 строк</span>
+            </div>
+            <div class="terminal-body" id="terminal-output">
+              <div class="log-line info"><span class="log-time">[12:00:00]</span> <span class="tag-pink">[WVF WD]</span> Система инициализирована. Готово к подключению.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 5. SETTINGS VIEW -->
+        <section class="view" id="view-settings">
+          <div class="view-header">
+            <div>
+              <h2 class="view-title">Настройки WVF WD</h2>
+              <p class="view-desc">Тонкая настройка сетевого туннеля, прокси и внешнего вида</p>
+            </div>
+          </div>
+
+          <div class="settings-grid">
+            <div class="card">
+              <h3 class="card-title">Сетевой режим</h3>
+              
+              <div class="setting-item">
+                <div>
+                  <span class="setting-label">Режим клиента</span>
+                  <span class="setting-sub">SOCKS5 локальный порт или полноразмерный VPN</span>
+                </div>
+                <select id="select-mode" class="form-select">
+                  <option value="socks" selected>SOCKS5 (127.0.0.1:1080) — Системный прокси (Рекомендуется)</option>
+                  <option value="rawtun">Raw (RAW-IP туннель — Требует сервер с -listen-raw)</option>
+                  <option value="vpn">WireGuard VPN — wg-turn.conf + SOCKS5</option>
+                </select>
+              </div>
+
+              <div class="setting-item">
+                <div>
+                  <span class="setting-label">Автоматический системный прокси</span>
+                  <span class="setting-sub">Перенаправлять весь трафик Windows/Linux через SOCKS5 при включении</span>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="check-sysproxy" checked>
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <div class="setting-item">
+                <div>
+                  <span class="setting-label">Локальный SOCKS5 адрес</span>
+                  <span class="setting-sub">Хост и порт для приложений (Telegram, браузер и т.д.)</span>
+                </div>
+                <input type="text" id="input-socks-addr" class="form-input small" value="127.0.0.1:1080">
+              </div>
+
+              <div class="setting-item">
+                <div>
+                  <span class="setting-label">Количество воркеров (потоков)</span>
+                  <span class="setting-sub">Рекомендуется 9 потоков для оптимальной скорости</span>
+                </div>
+                <input type="number" id="input-workers" class="form-input small" value="9" min="1" max="108">
+              </div>
+            </div>
+
+            <div class="card">
+              <h3 class="card-title">Протокол QWDTT & VK</h3>
+
+              <div class="setting-item">
+                <div>
+                  <span class="setting-label">Тип обфускации (RTP)</span>
+                  <span class="setting-sub">Маскировка под аудио или видеопоток звонка</span>
+                </div>
+                <select id="select-obfs" class="form-select">
+                  <option value="audio" selected>Аудио RTP (Стандарт)</option>
+                  <option value="video">Видео RTP</option>
+                </select>
+              </div>
+
+              <div class="setting-item">
+                <div>
+                  <span class="setting-label">Транспорт к TURN-relay</span>
+                  <span class="setting-sub">Использовать TCP при сильном дропе UDP провайдером</span>
+                </div>
+                <select id="select-turn-transport" class="form-select">
+                  <option value="udp" selected>UDP (Быстрый, низкая задержка)</option>
+                  <option value="tcp">TCP (Обход блокировок UDP)</option>
+                </select>
+              </div>
+
+              <div class="setting-item">
+                <div>
+                  <span class="setting-label">DNS сервер для VK</span>
+                  <span class="setting-sub">Резолв адресов API VK и TURN-серверов</span>
+                </div>
+                <select id="select-dns" class="form-select">
+                  <option value="yandex" selected>Yandex DNS</option>
+                  <option value="cloudflare">Cloudflare (1.1.1.1)</option>
+                  <option value="google">Google (8.8.8.8)</option>
+                  <option value="doh-yandex">DoH Yandex (Зашифрованный)</option>
+                </select>
+              </div>
+
+              <div class="setting-item">
+                <div>
+                  <span class="setting-label">Цветовая тема</span>
+                  <span class="setting-sub">Черно-нежно-розовый нуар по умолчанию</span>
+                </div>
+                <div class="palette-picker">
+                  <div class="palette-swatch active" data-palette="pink_noir" style="background: linear-gradient(135deg, #09090D 50%, #FF8DA1 50%);" title="WVF Pink Noir"></div>
+                  <div class="palette-swatch" data-palette="indigo" style="background: linear-gradient(135deg, #131316 50%, #5B588D 50%);" title="Indigo"></div>
+                  <div class="palette-swatch" data-palette="espresso" style="background: linear-gradient(135deg, #1A1614 50%, #6D4C41 50%);" title="Espresso"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal: Import Profile -->
+  <div class="modal-overlay" id="modal-import" style="display:none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Импорт профиля WVF WD / qWDTT</h3>
+        <button class="modal-close" id="btn-close-import">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">Вставьте конфигурационную ссылку (<code>qwdtt://config?...</code> или <code>wvfwd://config?...</code>) или текст конфига:</p>
+        <textarea id="import-text" class="form-textarea" rows="4" placeholder="qwdtt://config?peer=1.2.3.4:9000&pass=...&hashes=..."></textarea>
+        <div style="margin-top:12px; display:flex; gap:10px; align-items:center;">
+          <label class="btn btn-secondary" style="cursor:pointer; margin:0;">
+            <span>Выбрать файл (.qwdtt / .conf)</span>
+            <input type="file" id="import-file" style="display:none;" accept=".qwdtt,.conf,.json,.txt">
+          </label>
+          <span id="import-filename" class="text-muted" style="font-size:12px;"></span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btn-cancel-import">Отмена</button>
+        <button class="btn btn-primary" id="btn-submit-import">Импортировать</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: New Profile -->
+  <div class="modal-overlay" id="modal-new-profile" style="display:none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Новый профиль подключения</h3>
+        <button class="modal-close" id="btn-close-new-profile">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Имя профиля</label>
+          <input type="text" id="new-profile-name" class="form-input" placeholder="Например: Мой VPS Нидерланды">
+        </div>
+        <div class="form-group">
+          <label>VPS Сервер (IP : Порт)</label>
+          <input type="text" id="new-profile-peer" class="form-input" placeholder="123.45.67.89:9000">
+        </div>
+        <div class="form-group">
+          <label>Пароль подключения</label>
+          <input type="password" id="new-profile-pass" class="form-input" placeholder="Пароль от сервера">
+        </div>
+        <div class="form-group">
+          <label>VK Хеш звонка</label>
+          <input type="text" id="new-profile-hash" class="form-input" placeholder="Хеш или ссылка vk.com/call/join/...">
+        </div>
+        <div class="form-group">
+          <label>Режим</label>
+          <select id="new-profile-mode" class="form-select">
+            <option value="socks" selected>SOCKS5 (127.0.0.1:1080)</option>
+            <option value="vpn">WireGuard VPN</option>
+            <option value="rawtun">Raw (RAW-IP)</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btn-cancel-new-profile">Отмена</button>
+        <button class="btn btn-primary" id="btn-submit-new-profile">Создать профиль</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=WVF WD
+GenericName=QWDTT VPN Client
+Comment=Multiplatform client for QWDTT protocol over VK TURN calls infrastructure
+Exec=bash -c "cd $(dirname %k) && ./run-linux.sh"
+Icon=wvf-wd
+Terminal=false
+Categories=Network;Security;VPN;
+Keywords=VPN;Proxy;SOCKS5;VK;TURN;WireGuard;QWDTT;WVF;
+StartupWMClass=wvf-wd

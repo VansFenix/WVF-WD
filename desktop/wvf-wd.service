@@ -1,0 +1,15 @@
+[Unit]
+Description=WVF WD - QWDTT Protocol Tunnel Client
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/.local/share/wvf-wd
+ExecStart=%h/.local/share/wvf-wd/wvf-wd -peer 127.0.0.1:9000 -password secret -vk hash -mode socks -socks 127.0.0.1:1080
+Restart=on-failure
+RestartSec=5s
+LimitNOFILE=65535
+
+[Install]
+WantedBy=default.target

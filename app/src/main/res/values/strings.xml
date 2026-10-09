@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">WVF WD</string>
+    <string name="shortcut_start_short">Подключить</string>
+    <string name="shortcut_start_long">Подключить WVF WD</string>
+    <string name="shortcut_stop_short">Отключить</string>
+    <string name="shortcut_stop_long">Отключить WVF WD</string>
+</resources>
