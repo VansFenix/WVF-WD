@@ -241,6 +241,25 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  if (url.pathname === '/api/window/mode' && req.method === 'POST') {
+    let body = '';
+    req.on('data', c => body += c);
+    req.on('end', () => {
+      try {
+        const { mode } = JSON.parse(body);
+        if (typeof global.setWindowMode === 'function') {
+          global.setWindowMode(mode);
+        }
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: true }));
+      } catch (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: false, error: err.message }));
+      }
+    });
+    return;
+  }
+
   if (url.pathname === '/api/ping' && req.method === 'POST') {
     let body = '';
     req.on('data', c => body += c);

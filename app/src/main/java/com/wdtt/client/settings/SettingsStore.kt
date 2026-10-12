@@ -123,6 +123,7 @@ class SettingsStore(context: Context) {
         const val SUPPORT_NOTICE_VERSION_CODE = 28
 
         // ═══ Поведение ═══
+        private val COMPACT_VIEW_ENABLED = booleanPreferencesKey("compact_view_enabled")
         private val AUTO_SWITCH_TO_LOGS = booleanPreferencesKey("auto_switch_to_logs")
         private val STOP_ON_WIFI = booleanPreferencesKey("stop_on_wifi")
         /** Автоперерезолв доменов обхода и reload WG при смене IP. */
@@ -415,6 +416,7 @@ class SettingsStore(context: Context) {
     val supportNoticeShownVersionCode: Flow<Int> = dataStore.data.map { it[SUPPORT_NOTICE_SHOWN_VERSION_CODE] ?: 0 }
 
     // ═══ Поведение ═══
+    val compactViewEnabled: Flow<Boolean> = dataStore.data.map { it[COMPACT_VIEW_ENABLED] ?: false }
     val autoSwitchToLogs: Flow<Boolean> = dataStore.data.map { it[AUTO_SWITCH_TO_LOGS] ?: true }
     val stopOnWifi: Flow<Boolean> = dataStore.data.map { it[STOP_ON_WIFI] ?: false }
     /** Периодический перерезолв доменов обхода. По умолчанию включён. */
@@ -431,6 +433,10 @@ class SettingsStore(context: Context) {
     }
     val subscriptionAutoRefreshHours: Flow<Int> = dataStore.data.map {
         it[SUB_AUTO_REFRESH_HOURS] ?: DEFAULT_SUB_AUTO_REFRESH_HOURS
+    }
+
+    suspend fun saveCompactViewEnabled(enabled: Boolean) {
+        dataStore.edit { prefs -> prefs[COMPACT_VIEW_ENABLED] = enabled }
     }
 
     suspend fun saveAutoSwitchToLogs(enabled: Boolean) {

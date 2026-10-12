@@ -101,9 +101,11 @@ class TunnelService : Service() {
                             noDtlsEnabled -> serverDirectPort
                             else -> serverDtlsPort
                         }
-                        val peerWithPort = if (basePeer.isBlank()) basePeer
-                            else if (manualPortsEnabled) PeerAddress.withPort(basePeer, effectiveServerPort)
-                            else PeerAddress.ensurePort(basePeer, effectiveServerPort)
+                        val peerWithPort = PeerAddress.resolveEffectivePeer(
+                            basePeer,
+                            effectiveServerPort,
+                            manualPortsEnabled
+                        )
                         val vkAnonPath = SettingsStore.normalizeVkAnonPath(
                             intent.getStringExtra("vk_anon_path")?.takeIf { it.isNotEmpty() }
                                 ?: store.vkAnonPath.first()
@@ -209,9 +211,11 @@ class TunnelService : Service() {
                     noDtlsEnabled -> serverDirectPort
                     else -> serverDtlsPort
                 }
-                val peerWithPort = if (basePeer.isBlank()) basePeer
-                    else if (manualPortsEnabled) PeerAddress.withPort(basePeer, effectiveServerPort)
-                    else PeerAddress.ensurePort(basePeer, effectiveServerPort)
+                val peerWithPort = PeerAddress.resolveEffectivePeer(
+                    basePeer,
+                    effectiveServerPort,
+                    manualPortsEnabled
+                )
                 val params = TunnelParams(
                     peer = peerWithPort,
                     vkHashes = store.vkHashes.first(),

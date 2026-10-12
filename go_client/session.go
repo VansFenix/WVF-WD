@@ -368,6 +368,9 @@ func RunSession(
 					}
 					payload = plain[:m]
 				}
+				if len(payload) > 0 && payload[0] == keepaliveByte {
+					continue
+				}
 				if atomic.CompareAndSwapUint32(&firstWrapUp, 0, 1) {
 					log.Printf("[СЕССИЯ #%d] [ДЕБАГ] Успешно расшифрован/получен ПЕРВЫЙ пакет от TURN Relay (%d байт)", sessionID, len(payload))
 				}
@@ -423,10 +426,20 @@ func RunSession(
 		dtlsCfg := &dtls.Config{
 			Certificates:          []tls.Certificate{cert},
 			InsecureSkipVerify:    true,
-			ExtendedMasterSecret:  dtls.RequireExtendedMasterSecret,
-			CipherSuites:          []dtls.CipherSuiteID{dtls.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256},
+			ExtendedMasterSecret:  dtls.RequestExtendedMasterSecret,
+			CipherSuites: []dtls.CipherSuiteID{
+				dtls.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+				dtls.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+				dtls.TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256,
+				dtls.TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256,
+				dtls.TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA,
+				dtls.TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA,
+				dtls.TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
+				dtls.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+				dtls.TLS_PSK_WITH_AES_128_GCM_SHA256,
+			},
 			ConnectionIDGenerator: dtls.OnlySendCIDGenerator(),
-			MTU:                   1100,
+			MTU:                   1200,
 			// No ServerName (SNI) — less detectable by DPI
 		}
 
@@ -668,7 +681,7 @@ func RunSession(
 			}
 
 			// Skip keepalive pong from server
-			if n == 1 && b[0] == keepaliveByte {
+			if n > 0 && b[0] == keepaliveByte {
 				continue
 			}
 
@@ -825,6 +838,9 @@ func RunPing(
 				}
 				payload = plain[:m]
 			}
+			if len(payload) > 0 && payload[0] == keepaliveByte {
+				continue
+			}
 			_, _ = pipeA.WriteTo(payload, peer)
 		}
 	}()
@@ -859,10 +875,20 @@ func RunPing(
 	dtlsCfg := &dtls.Config{
 		Certificates:          []tls.Certificate{cert},
 		InsecureSkipVerify:    true,
-		ExtendedMasterSecret:  dtls.RequireExtendedMasterSecret,
-		CipherSuites:          []dtls.CipherSuiteID{dtls.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256},
+		ExtendedMasterSecret:  dtls.RequestExtendedMasterSecret,
+		CipherSuites: []dtls.CipherSuiteID{
+			dtls.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+			dtls.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+			dtls.TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256,
+			dtls.TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256,
+			dtls.TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA,
+			dtls.TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA,
+			dtls.TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
+			dtls.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+			dtls.TLS_PSK_WITH_AES_128_GCM_SHA256,
+		},
 		ConnectionIDGenerator: dtls.OnlySendCIDGenerator(),
-		MTU:                   1100,
+		MTU:                   1200,
 	}
 
 	dtlsConn, err := dtls.Client(pipeB, peer, dtlsCfg)

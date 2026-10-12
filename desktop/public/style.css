@@ -1,28 +1,29 @@
 :root {
-  --bg-primary: #07070a;
-  --bg-secondary: #0e0d14;
-  --bg-card: rgba(18, 17, 26, 0.75);
-  --bg-card-hover: rgba(28, 26, 38, 0.85);
-  --bg-input: #14131d;
+  --bg-primary: #060608;
+  --bg-secondary: #0b0a11;
+  --bg-card: rgba(16, 14, 24, 0.76);
+  --bg-card-hover: rgba(26, 22, 38, 0.88);
+  --bg-input: #12101a;
   
-  --pink-primary: #ff85a1;
-  --pink-secondary: #ffaec0;
-  --pink-soft: #ffd9e2;
-  --pink-deep: #3e1225;
-  --pink-glow: rgba(255, 133, 161, 0.45);
-  --pink-glow-strong: rgba(255, 133, 161, 0.85);
+  --pink-primary: #ff5c8a;
+  --pink-secondary: #ff8da1;
+  --pink-soft: #ffe4ec;
+  --pink-deep: #2c0c1b;
+  --pink-glow: rgba(255, 92, 138, 0.45);
+  --pink-glow-strong: rgba(255, 92, 138, 0.88);
+  --pink-glow-ambient: 0 0 35px rgba(255, 92, 138, 0.25);
 
   --accent-green: #34d399;
   --accent-amber: #fbbf24;
   --accent-blue: #60a5fa;
-  --accent-red: #ff6b6b;
+  --accent-red: #ff5277;
 
-  --text-main: #fcf1f4;
-  --text-muted: #9c8e97;
-  --text-dim: #6b6068;
+  --text-main: #fdf2f5;
+  --text-muted: #a6949f;
+  --text-dim: #73636d;
 
-  --border-subtle: rgba(255, 133, 161, 0.12);
-  --border-glow: rgba(255, 133, 161, 0.4);
+  --border-subtle: rgba(255, 92, 138, 0.14);
+  --border-glow: rgba(255, 92, 138, 0.45);
 
   --radius-sm: 8px;
   --radius-md: 14px;
@@ -54,8 +55,9 @@ body {
   display: flex;
   height: 100vh;
   width: 100vw;
-  background: radial-gradient(circle at 80% 15%, rgba(255, 133, 161, 0.07) 0%, transparent 45%),
-              radial-gradient(circle at 10% 85%, rgba(62, 18, 37, 0.25) 0%, transparent 55%),
+  background: radial-gradient(ellipse at 85% 12%, rgba(255, 92, 138, 0.10) 0%, transparent 50%),
+              radial-gradient(ellipse at 12% 88%, rgba(84, 18, 48, 0.32) 0%, transparent 60%),
+              radial-gradient(ellipse at 50% 50%, rgba(20, 10, 18, 0.5) 0%, transparent 100%),
               var(--bg-primary);
 }
 
@@ -330,6 +332,59 @@ body {
   font-family: var(--font-mono);
   font-weight: 600;
   color: var(--pink-soft);
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-view-mode {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(255, 92, 138, 0.12);
+  border: 1px solid rgba(255, 92, 138, 0.3);
+  color: var(--pink-soft);
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-view-mode:hover {
+  background: rgba(255, 92, 138, 0.22);
+  border-color: var(--pink-primary);
+  color: #fff;
+  box-shadow: 0 0 16px rgba(255, 92, 138, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn-view-mode .view-icon {
+  width: 15px;
+  height: 15px;
+}
+
+.profile-header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+}
+
+.compact-profile-picker {
+  display: none;
+  max-width: 220px;
+  background: rgba(18, 16, 26, 0.9);
+  border: 1px solid var(--border-glow);
+  color: var(--text-main);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  font-size: 12px;
 }
 
 /* Views Wrapper */
@@ -1105,3 +1160,171 @@ input:checked + .slider:before {
   border-color: var(--pink-primary);
   box-shadow: 0 0 12px var(--pink-glow);
 }
+
+/* ==============================================================
+   COMPACT MODE (Компактный мини-виджет)
+   ============================================================== */
+body.compact-mode {
+  overflow-y: auto !important;
+}
+
+body.compact-mode .app-container {
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow-y: auto;
+  overflow-x: hidden;
+  align-items: center;
+}
+
+body.compact-mode .sidebar {
+  display: none !important;
+}
+
+body.compact-mode .main-content {
+  width: 100%;
+  max-width: 460px;
+  margin: 0 auto;
+  padding: 14px 12px;
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+body.compact-mode .topbar {
+  height: auto;
+  min-height: 52px;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  margin-bottom: 14px;
+  background: rgba(14, 13, 22, 0.92);
+  border: 1px solid var(--border-subtle);
+  flex-wrap: wrap;
+  gap: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+body.compact-mode .topbar-status {
+  width: 100%;
+  justify-content: space-between;
+}
+
+body.compact-mode .topbar-metrics {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 4px;
+}
+
+body.compact-mode .topbar-metrics .metric-chip {
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  background: rgba(10, 9, 16, 0.7);
+}
+
+body.compact-mode .topbar-actions {
+  width: 100%;
+  justify-content: center;
+  margin-top: 6px;
+}
+
+body.compact-mode .btn-view-mode {
+  width: 100%;
+  justify-content: center;
+  padding: 8px;
+  background: rgba(255, 92, 138, 0.16);
+  border-color: var(--pink-primary);
+}
+
+body.compact-mode .views-wrapper {
+  padding: 0;
+  flex: 1;
+}
+
+body.compact-mode .hero-card {
+  flex-direction: column-reverse;
+  padding: 24px 16px;
+  align-items: center;
+  text-align: center;
+  gap: 22px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(145deg, rgba(22, 18, 30, 0.9) 0%, rgba(12, 10, 18, 0.95) 100%);
+  border: 1px solid var(--border-glow);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 141, 161, 0.15);
+}
+
+body.compact-mode .hero-right {
+  padding-left: 0;
+  width: 100%;
+}
+
+body.compact-mode .hero-left {
+  width: 100%;
+}
+
+body.compact-mode .profile-header-row {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+}
+
+body.compact-mode .compact-profile-picker {
+  display: block;
+  width: 100%;
+  max-width: 280px;
+  text-align: center;
+  cursor: pointer;
+}
+
+body.compact-mode .hero-meta-grid {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin: 16px 0;
+}
+
+body.compact-mode .meta-box {
+  padding: 8px 10px;
+  text-align: left;
+}
+
+body.compact-mode .hero-actions {
+  flex-direction: column;
+  gap: 8px;
+}
+
+body.compact-mode .hero-actions .btn {
+  width: 100%;
+  justify-content: center;
+}
+
+body.compact-mode .power-button-container {
+  width: 156px;
+  height: 156px;
+}
+
+body.compact-mode .power-button {
+  width: 136px;
+  height: 136px;
+}
+
+body.compact-mode .power-button:hover {
+  transform: scale(1.04);
+}
+
+body.compact-mode .connection-timer {
+  margin-top: 14px;
+  font-size: 16px;
+}
+
+body.compact-mode .cards-row {
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+body.compact-mode .card-graph {
+  display: none;
+}
+

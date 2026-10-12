@@ -10,11 +10,11 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/VansFenix/WVF-WD/releases/latest"><img src="https://img.shields.io/badge/Release-v2.0.0-ff85a1?style=for-the-badge&logo=github&labelColor=09090d" alt="Latest Release"></a>
-  <img src="https://img.shields.io/badge/Platforms-Android%20%7C%20Windows%20%7C%20Linux-ff85a1?style=for-the-badge&labelColor=09090d" alt="Platforms">
-  <img src="https://img.shields.io/badge/Protocol-QWDTT%20(WebRTC%20RTP%20AEAD)-3e1225?style=for-the-badge&labelColor=09090d&color=ff85a1" alt="Protocol">
-  <img src="https://img.shields.io/badge/Style-Pink%20Noir-ff85a1?style=for-the-badge&labelColor=09090d" alt="Style">
-  <img src="https://img.shields.io/badge/License-GPL%20v3-green?style=for-the-badge&labelColor=09090d" alt="License">
+  <a href="https://github.com/VansFenix/WVF-WD/releases/latest"><img src="https://img.shields.io/badge/Release-v2.1.0-ff5c8a?style=for-the-badge&logo=github&labelColor=060608" alt="Latest Release"></a>
+  <img src="https://img.shields.io/badge/Platforms-Android%20%7C%20Windows%20%7C%20Linux-ff5c8a?style=for-the-badge&labelColor=060608" alt="Platforms">
+  <img src="https://img.shields.io/badge/Protocol-QWDTT%20(WebRTC%20RTP%20AEAD)-2c0c1b?style=for-the-badge&labelColor=060608&color=ff5c8a" alt="Protocol">
+  <img src="https://img.shields.io/badge/Style-Pink%20Noir-ff5c8a?style=for-the-badge&labelColor=060608" alt="Style">
+  <img src="https://img.shields.io/badge/License-GPL%20v3-green?style=for-the-badge&labelColor=060608" alt="License">
 </p>
 
 ---
@@ -29,10 +29,19 @@
 
 ## ✨ Ключевые возможности
 
-### 🎨 Эстетика WVF Pink Noir
-* Глубокий обсидиановый фон (`#07070A`, `#0E0D14`) с неоновым свечением и нежно-пастельными розовыми акцентами (`#FF85A1`, `#FFAEC0`, `#FFD9E2`).
+### 🎨 Улучшенная эстетика WVF Pink Noir
+* Глубокий бархатный обсидиановый фон (`#060608`, `#0C0B12`) с ярким люминесцентным неоново-розовым свечением (`#FF5C8A`, `#FF8DA1`, `#FFE4EC`).
 * Фирменный логотип с защитным щитом и волновым контуром.
-* Плавные анимации, пульсирующие индикаторы статуса соединения и живой график скорости.
+* Плавные радиальные анимации пульсации питания, стеклянные карточки с размытием заднего плана и живой график скорости.
+
+### 📱 Компактный и Полный режимы интерфейса (New in v2.1.0)
+* **Десктоп (Windows / Linux)**: кнопка мгновенного переключения в верхней панели и настройках между **Полным видом** (детальный дашборд с графиками и логами) и **Компактным видом** (элегантный мини-виджет 440x680 с большой кнопкой подключения, статусом, IP, пингом и быстрой сменой профилей).
+* **Android**: переключатель «Компактный вид интерфейса» в настройках позволяет свернуть громоздкие технические поля, оставив только самое главное для комфортного повседневного использования.
+
+### 🛡️ Стабильный и всеядный DTLS туннель (v2.1.0)
+* Полная поддержка серверов со всеми типами сертификатов (ECDSA и RSA).
+* Адаптивное согласование **Extended Master Secret** (`RequestExtendedMasterSecret`) — устраняет обрыв хендшейка на серверах без принудительного EMS.
+* Чистая фильтрация keepalive-пакетов внутри туннельного пайпа и динамическое автоматическое переключение портов сервера (`56000 DTLS`, `56002 Direct`, `56003 Raw`) без залипаний.
 
 ### 🌐 Поддержка всех режимов туннелирования
 * **SOCKS5 (Userspace)**: локальный прокси `127.0.0.1:1080`, не требующий прав администратора.
@@ -40,8 +49,8 @@
 * **Raw (RAW-IP)**: прямой обмен пакетами через сокет с авто-переключением userspace на десктопе.
 
 ### 💻 Windows
-* **Полноценный установщик NSIS**: `WVF-WD-Setup-v2.0.0.exe` с ярлыком на рабочем столе, меню «Пуск» и деинсталлятором.
-* **Портативная версия**: `WVF-WD-Portable-v2.0.0.exe` (запуск без установки).
+* **Полноценный установщик NSIS**: `WVF-WD-Setup-v2.1.0.exe` с ярлыком на рабочем столе, меню «Пуск» и деинсталлятором.
+* **Портативная версия**: `WVF-WD-Portable-v2.1.0.exe` (запуск без установки).
 * **Мгновенный системный прокси**: вызов WinINet API (`InternetSetOption`) мгновенно перенаправляет весь трафик браузеров (Chrome, Edge, Яндекс) в туннель без перезагрузки системы.
 * **Проверка внешнего IP в 1 клик**: встроенная кнопка тестирования внешнего IP и геолокации.
 
@@ -64,13 +73,13 @@
 
 | Операционная система | Файл | Описание |
 | :--- | :--- | :--- |
-| **🪟 Windows (Установщик)** | `WVF-WD-Setup-v2.0.0.exe` | Официальный мастер установки с ярлыками и интеграцией в систему |
-| **🪟 Windows (Портативный)** | `WVF-WD-Portable-v2.0.0.exe` | Автономный запуск в 1 клик без установки |
-| **🪟 Windows (Архив)** | `WVF-WD-Desktop-Windows-v2.0.0.zip` | Легковесный архив с веб-клиентом и `Запуск WVF WD.bat` |
+| **🪟 Windows (Установщик)** | `WVF-WD-Setup-v2.1.0.exe` | Официальный мастер установки с ярлыками и интеграцией в систему |
+| **🪟 Windows (Портативный)** | `WVF-WD-Portable-v2.1.0.exe` | Автономный запуск в 1 клик без установки |
+| **🪟 Windows (Архив)** | `WVF-WD-Desktop-Windows-v2.1.0.zip` | Легковесный архив с веб-клиентом и `Запуск WVF WD.bat` |
 | **🐧 Linux (Установщик)** | `setup-linux.sh` | Установочный скрипт в системное меню и PATH |
-| **🐧 Linux (Архив)** | `WVF-WD-Desktop-Linux-v2.0.0.tar.gz` | Полный дистрибутив для x86_64 и ARM64 с systemd-сервисом |
-| **📱 Android (ARM64)** | `wvf-wd-arm64-v8a-v2.0.0.apk` | Оптимизированный APK для современных 64-битных смартфонов |
-| **📱 Android (Универсальный)** | `wvf-wd-universal-v2.0.0.apk` | Универсальный APK для всех архитектур Android |
+| **🐧 Linux (Архив)** | `WVF-WD-Desktop-Linux-v2.1.0.tar.gz` | Полный дистрибутив для x86_64 и ARM64 с systemd-сервисом |
+| **📱 Android (ARM64)** | `wvf-wd-arm64-v8a-v2.1.0.apk` | Оптимизированный APK для современных 64-битных смартфонов |
+| **📱 Android (Универсальный)** | `wvf-wd-universal-v2.1.0.apk` | Универсальный APK для всех архитектур Android |
 
 ---
 
@@ -79,21 +88,21 @@
 ### 1. Windows
 
 #### Вариант A — Официальный установщик (Рекомендуется):
-1. Скачайте `WVF-WD-Setup-v2.0.0.exe` и запустите его.
+1. Скачайте `WVF-WD-Setup-v2.1.0.exe` и запустите его.
 2. Следуйте подсказкам мастера установки. На рабочем столе появится ярлык **WVF WD**.
 3. Запустите приложение, введите параметры сервера и нажмите **ПОДКЛЮЧИТЬ**.
 
 #### Вариант B — Портативный:
-1. Скачайте `WVF-WD-Portable-v2.0.0.exe` и запустите.
+1. Скачайте `WVF-WD-Portable-v2.1.0.exe` и запустите.
 2. Приложение сразу откроется в черно-нежно-розовом окне с треем.
 
 ---
 
 ### 2. Linux
 
-1. Скачайте архив `WVF-WD-Desktop-Linux-v2.0.0.tar.gz` и распакуйте его:
+1. Скачайте архив `WVF-WD-Desktop-Linux-v2.1.0.tar.gz` и распакуйте его:
 ```bash
-tar -xvf WVF-WD-Desktop-Linux-v2.0.0.tar.gz
+tar -xvf WVF-WD-Desktop-Linux-v2.1.0.tar.gz
 cd wvf-wd
 ```
 2. Запустите установщик:
@@ -112,7 +121,7 @@ sudo ./setup-linux.sh
 
 ### 3. Android
 
-1. Скачайте `wvf-wd-arm64-v8a-v2.0.0.apk` (или универсальный APK) на смартфон.
+1. Скачайте `wvf-wd-arm64-v8a-v2.1.0.apk` (или универсальный APK) на смартфон.
 2. Разрешите установку из неизвестных источников и установите приложение.
 3. Откройте **WVF WD**, добавьте ваш профиль VPS или вставьте ссылку `qwdtt://`.
 4. Нажмите **«Подключить»** и разрешите создание VPN-соединения.

@@ -13,7 +13,7 @@ CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 echo -e "${PINK}=====================================================${NC}"
-echo -e "${PINK}    ✦ WVF WD — Установщик для Linux (v2.0.0) ✦${NC}"
+echo -e "${PINK}    ✦ WVF WD — Установщик для Linux (v2.1.0) ✦${NC}"
 echo -e "${PINK}    Клиент протокола QWDTT (TURN VK) в стиле Pink Noir${NC}"
 echo -e "${PINK}=====================================================${NC}"
 echo ""

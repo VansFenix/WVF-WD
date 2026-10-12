@@ -51,4 +51,22 @@ object PeerAddress {
         val hostForUrl = if (effectiveHost.contains(':')) "[$effectiveHost]" else effectiveHost
         return "$hostForUrl:$effectivePort"
     }
+
+    /**
+     * Разрешает целевой эндпоинт пира с учётом режима:
+     * если [manualPorts] включён, порт всегда заменяется на [targetPort].
+     * Если порт явно не указан или равен одному из стандартных портов (56000, 56002, 56003),
+     * он динамически переключается на [targetPort].
+     * Если указан нестандартный кастомный порт (например 443) и [manualPorts] выключен, он сохраняется.
+     */
+    fun resolveEffectivePeer(peer: String, targetPort: Int, manualPorts: Boolean): String {
+        val trimmed = peer.trim()
+        if (trimmed.isEmpty()) return trimmed
+        val currentPort = port(trimmed)
+        return if (manualPorts || currentPort == null || currentPort in listOf(56000, 56002, 56003)) {
+            withPort(trimmed, targetPort)
+        } else {
+            ensurePort(trimmed, targetPort)
+        }
+    }
 }

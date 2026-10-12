@@ -160,6 +160,7 @@ fun SettingsTabContent(
             }
         }
     }
+    val compactViewEnabled by settingsStore.compactViewEnabled.collectAsStateWithLifecycle(initialValue = false)
     val autoSwitchToLogs by settingsStore.autoSwitchToLogs.collectAsStateWithLifecycle(initialValue = true)
     val stopOnWifi by settingsStore.stopOnWifi.collectAsStateWithLifecycle(initialValue = false)
     val bypassAutoRefresh by settingsStore.bypassAutoRefresh.collectAsStateWithLifecycle(initialValue = true)
@@ -772,6 +773,33 @@ fun SettingsTabContent(
                         style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
                         color = MaterialTheme.colorScheme.primary
                     )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Column(modifier = Modifier.weight(1f).padding(end = 16.dp)) {
+                            Text(
+                                "Компактный вид интерфейса",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Medium
+                            )
+                            Text(
+                                "Скрыть детальные поля настроек на главном экране",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Switch(
+                            checked = compactViewEnabled,
+                            onCheckedChange = { enabled ->
+                                scope.launch { settingsStore.saveCompactViewEnabled(enabled) }
+                            }
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -2057,7 +2085,8 @@ fun SettingsTabContent(
             }
         }
 
-        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f))
+        if (!compactViewEnabled) {
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f))
 
         AppSectionCard(
             contentPadding = PaddingValues(16.dp),
@@ -2451,6 +2480,30 @@ fun SettingsTabContent(
                 }
                 }
                 }
+        }
+        } else {
+            Spacer(modifier = Modifier.height(10.dp))
+            OutlinedButton(
+                onClick = {
+                    scope.launch { settingsStore.saveCompactViewEnabled(false) }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = MaterialTheme.colorScheme.primary
+                ),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.35f))
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(Modifier.width(8.dp))
+                Text("Развернуть детальные настройки", fontWeight = FontWeight.SemiBold)
+            }
         }
 
     }

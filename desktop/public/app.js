@@ -26,7 +26,8 @@
         obfs: 'audio'
       }
     ],
-    activeProfileId: 'default'
+    activeProfileId: 'default',
+    viewMode: localStorage.getItem('wvf_view_mode') || 'full'
   };
 
   // DOM Elements
@@ -46,6 +47,12 @@
     btnClearLogs: document.getElementById('btn-clear-logs'),
     btnCopyLogs: document.getElementById('btn-copy-logs'),
     trafficCanvas: document.getElementById('traffic-canvas'),
+    // View Mode controls
+    btnToggleView: document.getElementById('btn-toggle-view'),
+    viewModeLabel: document.getElementById('view-mode-label'),
+    viewModeIcon: document.getElementById('view-mode-icon'),
+    selectViewMode: document.getElementById('select-view-mode'),
+    selectCompactProfile: document.getElementById('select-compact-profile'),
     // Quick Config Inputs
     inputQuickPeer: document.getElementById('input-quick-peer'),
     inputQuickPass: document.getElementById('input-quick-pass'),
@@ -151,6 +158,15 @@
       } else if (mode === 'rawtun') {
         els.activeModeBadge.textContent = 'Raw (RAW-IP)';
       }
+    if (els.selectCompactProfile) {
+      els.selectCompactProfile.innerHTML = '';
+      state.profiles.forEach(prof => {
+        const opt = document.createElement('option');
+        opt.value = prof.id;
+        opt.textContent = `${prof.name} (${prof.peer})`;
+        if (prof.id === state.activeProfileId) opt.selected = true;
+        els.selectCompactProfile.appendChild(opt);
+      });
     }
 
     renderHashList();
@@ -241,16 +257,70 @@
   }
 
   // Navigation tab switching
+  function switchTab(tab) {
+    document.querySelectorAll('.nav-item').forEach(b => {
+      b.classList.toggle('active', b.dataset.tab === tab);
+    });
+    document.querySelectorAll('.view').forEach(v => {
+      v.classList.toggle('active', v.id === `view-${tab}`);
+    });
+  }
+
   document.querySelectorAll('.nav-item').forEach(btn => {
     btn.addEventListener('click', () => {
-      const tab = btn.dataset.tab;
-      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-      btn.classList.add('active');
-      const targetView = document.getElementById(`view-${tab}`);
-      if (targetView) targetView.classList.add('active');
+      switchTab(btn.dataset.tab);
     });
   });
+
+  // View Mode: Compact vs Full Dashboard
+  function setViewMode(mode) {
+    state.viewMode = mode;
+    localStorage.setItem('wvf_view_mode', mode);
+
+    if (mode === 'compact') {
+      document.body.classList.add('compact-mode');
+      if (els.viewModeLabel) els.viewModeLabel.textContent = 'Полный вид';
+      if (els.selectViewMode) els.selectViewMode.value = 'compact';
+      switchTab('dashboard');
+    } else {
+      document.body.classList.remove('compact-mode');
+      if (els.viewModeLabel) els.viewModeLabel.textContent = 'Компактный вид';
+      if (els.selectViewMode) els.selectViewMode.value = 'full';
+    }
+
+    fetch('/api/window/mode', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mode })
+    }).catch(() => {});
+  }
+
+  if (els.btnToggleView) {
+    els.btnToggleView.addEventListener('click', () => {
+      const targetMode = state.viewMode === 'compact' ? 'full' : 'compact';
+      setViewMode(targetMode);
+    });
+  }
+
+  if (els.selectViewMode) {
+    els.selectViewMode.addEventListener('change', (e) => {
+      setViewMode(e.target.value);
+    });
+  }
+
+  if (els.selectCompactProfile) {
+    els.selectCompactProfile.addEventListener('change', (e) => {
+      if (state.connected) {
+        alert('Сначала отключите активное соединение для смены профиля');
+        e.target.value = state.activeProfileId;
+        return;
+      }
+      state.activeProfileId = e.target.value;
+      saveLocalState();
+      updateProfileUI();
+      addLog(`[WVF WD] Переключен профиль: ${getActiveProfile().name}`);
+    });
+  }
 
   // Log append
   function addLog(msg, type = 'info') {
@@ -836,6 +906,7 @@
 
   // Init
   loadLocalState();
+  setViewMode(state.viewMode);
   requestAnimationFrame(drawGraph);
   connectLogStream();
   addLog('[WVF WD] Клиент запущен. Готов к работе на Windows / Linux.');

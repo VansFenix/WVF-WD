@@ -18,17 +18,28 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1040,
     height: 720,
-    minWidth: 860,
-    minHeight: 600,
+    minWidth: 400,
+    minHeight: 520,
     title: 'WVF WD — QWDTT Client',
     icon: iconPath,
-    backgroundColor: '#07070a',
+    backgroundColor: '#060608',
     autoHideMenuBar: true,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true
     }
   });
+
+  global.setWindowMode = function(mode) {
+    if (!mainWindow || mainWindow.isDestroyed()) return;
+    if (mode === 'compact') {
+      mainWindow.setMinimumSize(380, 500);
+      mainWindow.setSize(440, 680, true);
+    } else {
+      mainWindow.setMinimumSize(400, 520);
+      mainWindow.setSize(1040, 720, true);
+    }
+  };
 
   // Load from local server
   mainWindow.loadURL(`http://127.0.0.1:${PORT}`);

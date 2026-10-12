@@ -1,7 +1,7 @@
 {
   "name": "wvf-wd-client",
   "productName": "WVF WD",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "WVF WD Multiplatform QWDTT Protocol Client",
   "main": "main.js",
   "author": "WVF WD Team",
